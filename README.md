@@ -97,4 +97,3 @@ Because there is no library, no service that 100% correct, 100% alive and reliab
 Some issues happen, like bad requests, failures, connection issues, deploys or config misses,
 human factor, code bugs and etc. 
 Better have a revalidation strategy even if your plan looks 'correct and flawless'
-
