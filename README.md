@@ -98,4 +98,3 @@ Some issues happen, like bad requests, failures, connection issues, deploys or c
 human factor, code bugs and etc. 
 Better have a revalidation strategy even if your plan looks 'correct and flawless'
 
-adding some text
