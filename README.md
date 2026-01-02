@@ -8,22 +8,22 @@
 
 ## Strategies
 
-#### Cache-Aside (Lazy loading)
-- on reads - from cache, misses, read from source, 
-write to cache and return data.
-- on write - invalidates cache or updates it
+#### Cache-Aside
+- reads from cache, misses, read from source, write to cache and return data
+- on write invalidates cache or updates it
 - simple, cold start, stale reads
 - good for heave reads, system that can stand stale data
+*can/should be combined with cache ttl to refresh stale cache periodically*
 
 #### Write-Through
-- Cache updates on write
-- write into cache, write into datasource.
+- on write update cache, write to datasource.
 - cache fresh, simple reads, latency for writes
 - good consistency
+*careful with errors writing to cache first, can lose data*
 
 #### Write-behind
-- write cache, update source later
-- fast writes
+- on write update cache, put data into some stash
+- queue/timeout/threshold the stash and batch all the data into datasource
 - possible data loss, hard recovery
 - good for non critical data, analytics
 
@@ -31,9 +31,29 @@ write to cache and return data.
 - cache fetches data itself on miss
 - centralized logic
 - complex cache logic
+- logically acts as Cache-Aside, but the responsibility for polling data is on cache entity
+which sounds pretty bad first, but conceptually some internal library uses layered "good structure"
+and exposes for user only one facade and user will not see the actual polling and caching.
+
+for example we have internals 
+_cache
+_storage 
+entity - user-land code aka facade
+```js
+ entity.get(key);
+ // but internally it will
+ const data = _cache.get(key);
+ if(data !== undefined) return data;
+ const fresh = _storage.get(key);
+ _cache.set(key, fresh);
+ return fresh; 
+```
 
 #### Refresh-Ahead
-- refresh item before TTL expires
+- on write set ttl
+- on read if stale, read db, refresh ttl
+- if fresh, and some threshold broke, (ttl - limit < threshold) refresh data and ttl
+- so the data stay "hot"
 
 #### Stale-While-Revalidate
 - serve stale
