@@ -63,8 +63,8 @@ queue some refresh work into queue
 
 #### Negative Caching
 - on write revalidate cache or update with fresh value + ttl
-- on read if source returns nothing assign key some value null | -1 | specific kind and small ttl
-- on read again return null-value as positive cache result
+- on read if source returns nothing assign key some specific value and small ttl
+- on read treat specific value as positive cache hit
 
 ## Write strategy - Write Coalescing
 - Combine many writes into one, basically write debounce
