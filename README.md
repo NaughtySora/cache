@@ -56,13 +56,18 @@ entity - user-land code aka facade
 - so the data stay "hot"
 
 #### Stale-While-Revalidate
-- serve stale
-- refresh async
-
-#### Write Coalescing
-- Combine many writes into one
+- on write refresh cache with ttl
+- on cache miss get data from source, refresh cache with ttl
+- on cache hit if ttl is still fresh return data, if ttl expire return stale but 
+queue some refresh work into queue
 
 #### Negative Caching
+- on write revalidate cache or update with fresh value + ttl
+- on read if source returns nothing assign key some value null | -1 | specific kind and small ttl
+- on read again return null-value as positive cache result
+
+## Write strategy - Write Coalescing
+- Combine many writes into one, basically write debounce
 
 ## Eviction policies / Cache patterns
 - LRU - least recent used
