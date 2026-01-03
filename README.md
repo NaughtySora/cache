@@ -57,7 +57,13 @@ treat specific value as positive cache hit
 - Combine many writes into one, basically a debounce
 
 ## Eviction policies / Cache patterns
-- LRU - least recent used
+
+#### LRU - least recent used
+- remove the least recently used item from the store
+- uses hash map for O(1) access, double linked list for ordering, might as well use adjusted DLL
+- used in general purpose caches (web, db buffers, in-memory cache)
+- bad for large sequential reads, one time access
+
 - LFU - least frequent used
 - MRU - most recent used
 - SLRU - segmented LRU, probationary, only frequently reused items reach protected area.
