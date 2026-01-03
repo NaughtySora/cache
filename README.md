@@ -9,65 +9,52 @@
 ## Strategies
 
 #### Cache-Aside
-- reads from cache, misses, read from source, write to cache and return data
-- on write invalidates cache or updates it
+- on read from cache: misses, read from source, write to cache and return data
+- on write: invalidates cache or updates it
 - simple, cold start, stale reads
 - good for heave reads, system that can stand stale data
-*can/should be combined with cache ttl to refresh stale cache periodically*
+
+*Should be combined with cache ttl to refresh stale cache periodically*
 
 #### Write-Through
-- on write update cache, write to datasource.
-- cache fresh, simple reads, latency for writes
+- on write: updates cache, writes to datasource
+- fresh cache, simple reads, latency for writes
 - good consistency
+
 *careful with errors writing to cache first, can lose data*
 
 #### Write-behind
-- on write update cache, put data into some stash
-- queue/timeout/threshold the stash and batch all the data into datasource
+- on write: updates cache, puts data into some stash
+- using async queue/timeout/threshold update datasource from stash
 - possible data loss, hard recovery
 - good for non critical data, analytics
 
 #### Read-Through
+- logically acts as Cache-Aside
 - cache fetches data itself on miss
-- centralized logic
-- complex cache logic
-- logically acts as Cache-Aside, but the responsibility for polling data is on cache entity
-which sounds pretty bad first, but conceptually some internal library uses layered "good structure"
-and exposes for user only one facade and user will not see the actual polling and caching.
-
-for example we have internals 
-_cache
-_storage 
-entity - user-land code aka facade
-```js
- entity.get(key);
- // but internally it will
- const data = _cache.get(key);
- if(data !== undefined) return data;
- const fresh = _storage.get(key);
- _cache.set(key, fresh);
- return fresh; 
-```
+- abstracts client from knowing about caching
 
 #### Refresh-Ahead
-- on write set ttl
+- on write: update cache and set ttl
 - on read if stale, read db, refresh ttl
-- if fresh, and some threshold broke, (ttl - limit < threshold) refresh data and ttl
-- so the data stay "hot"
+- if fresh, and some threshold passed, refresh data and ttl
+- keeps cache fresh
 
 #### Stale-While-Revalidate
-- on write refresh cache with ttl
-- on cache miss get data from source, refresh cache with ttl
-- on cache hit if ttl is still fresh return data, if ttl expire return stale but 
-queue some refresh work into queue
+- on write: refresh cache with ttl
+- if cache miss, get data from source, refresh cache with ttl
+- if cache hit, and ttl is still fresh return data, if ttl is expired return stale but 
+puts update into queue and refresh asynchronously
 
 #### Negative Caching
-- on write revalidate cache or update with fresh value + ttl
-- on read if source returns nothing assign key some specific value and small ttl
-- on read treat specific value as positive cache hit
+- on write: revalidate cache or update with fresh value + ttl
+- on read: if source returns nothing assign key a specific value and small ttl, 
+treat specific value as positive cache hit
 
-## Write strategy - Write Coalescing
-- Combine many writes into one, basically write debounce
+## Write strategies
+
+#### Write Coalescing
+- Combine many writes into one, basically a debounce
 
 ## Eviction policies / Cache patterns
 - LRU - least recent used
