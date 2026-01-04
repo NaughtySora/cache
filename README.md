@@ -64,7 +64,12 @@ treat specific value as positive cache hit
 - used in general purpose caches (web, db buffers, in-memory cache)
 - bad for large sequential reads, one time access
 
-- LFU - least frequent used
+#### LFU - least frequent used
+- remove item with lowest access count
+- uses hashmap, frequency map and min frequency value
+- used when recency predicts reuse, user sessions, web requests, ui data, screens, microservice read heavy
+- bad when recency is not important, scan or streaming workload, analytics scans, full table reads, ETL jobs
+
 - MRU - most recent used
 - SLRU - segmented LRU, probationary, only frequently reused items reach protected area.
 - ARC - adaptive replacement cache, Uses ghost lists
