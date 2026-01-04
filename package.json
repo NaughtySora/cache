@@ -13,6 +13,9 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "node ./test/index.js"
+    "test": "c8 node ./test/index.js"
+  },
+  "dependencies": {
+    "c8": "^10.1.3"
   }
 }

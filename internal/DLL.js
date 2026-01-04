@@ -50,10 +50,6 @@ class DLL {
   get isEmpty() {
     return this.#head === null;
   }
-
-  debug() {
-    console.dir(this.#head, { depth: Infinity })
-  }
 }
 
 module.exports = DLL;
