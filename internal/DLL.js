@@ -4,8 +4,7 @@ class DLL {
   #head = null;
   #tail = null;
 
-  unshift(value) {
-    const node = { value, next: null, prev: null };
+  #unshift(node) {
     if (this.#head === null) {
       return this.#head = this.#tail = node;
     }
@@ -14,6 +13,10 @@ class DLL {
     node.next = next;
     next.prev = node;
     return node;
+  }
+
+  unshift(value) {
+    return this.#unshift({ value, next: null, prev: null });
   }
 
   pop() {
@@ -38,6 +41,18 @@ class DLL {
     if (node === this.#head) this.#head = node.next;
     node.next = null;
     node.prev = null;
+  }
+
+  attach(node) {
+    return this.#unshift(node);
+  }
+
+  get isEmpty() {
+    return this.#head === null;
+  }
+
+  debug() {
+    console.dir(this.#head, { depth: Infinity })
   }
 }
 
