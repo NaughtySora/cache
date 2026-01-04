@@ -4,10 +4,11 @@ const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const LRU = require('../lib/eviction/LRU.js');
 
-describe.skip('LRU', () => {
+describe('LRU', () => {
 
   it('add/get', () => {
     const cache = new LRU(3);
+    assert.equal(cache.limit, 3);
     cache.set('a', 1);
     cache.set('b', 24);
     cache.set('c', 11);
