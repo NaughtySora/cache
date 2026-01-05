@@ -78,7 +78,13 @@ treat specific value as positive cache hit
 - bad when user driven workloads, hot keys accessed repeatedly, interactive systems
 
 
-- SLRU - segmented LRU, probationary, only frequently reused items reach protected area.
+#### SLRU - segmented LRU, probationary
+- only frequently reused items reach protected area.
+- uses 2 LRU small and large one.
+- evict from small, if large is full, move item in small
+- good for web caches, db buffers, noisy traffic, mixed workload
+- bad bc needs tuning, complexity, 
+
 - ARC - adaptive replacement cache, Uses ghost lists
 - CLOCK/CLOCK-Pro - approximate LRU with a clock hand
 - FIFO - first in first out
