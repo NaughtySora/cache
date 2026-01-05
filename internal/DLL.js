@@ -19,11 +19,21 @@ class DLL {
     return this.#unshift({ value, next: null, prev: null });
   }
 
+  shift() {
+    if (this.#head === null) return;
+    const head = this.#head;
+    this.#head = head.next;
+    if (head.next !== null) head.next.prev = null;
+    if (this.#head === null) this.#tail = null;
+    return head.value;
+  }
+
   pop() {
     if (this.#head === null) return;
     const tail = this.#tail;
     this.#tail = tail.prev;
-    if (tail === this.#head) this.#head = null;
+    if (tail.prev !== null) tail.prev.next = null;
+    if (this.#tail === null) this.#head = null;
     return tail.value;
   }
 
@@ -49,6 +59,18 @@ class DLL {
 
   get isEmpty() {
     return this.#head === null;
+  }
+
+  [Symbol.iterator]() {
+    let pointer = this.#head;
+    return {
+      next() {
+        if (pointer === null) return { done: true };
+        const next = { value: pointer.value, done: false };
+        pointer = pointer.next;
+        return next;
+      }
+    }
   }
 }
 

@@ -70,7 +70,14 @@ treat specific value as positive cache hit
 - used when recency predicts reuse, user sessions, web requests, ui data, screens, microservice read heavy
 - bad when recency is not important, scan or streaming workload, analytics scans, full table reads, ETL jobs
 
-- MRU - most recent used
+#### MRU - most recent used
+- remove the most recently used item
+- uses hash map and dll
+- good when recently accessed items are unlikely to be reused: 
+- sequential scans, Streaming / ETL reads, Iterating over large datasets once
+- bad when user driven workloads, hot keys accessed repeatedly, interactive systems
+
+
 - SLRU - segmented LRU, probationary, only frequently reused items reach protected area.
 - ARC - adaptive replacement cache, Uses ghost lists
 - CLOCK/CLOCK-Pro - approximate LRU with a clock hand
