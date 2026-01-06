@@ -78,7 +78,7 @@ treat specific value as positive cache hit
 - bad when user driven workloads, hot keys accessed repeatedly, interactive systems
 
 
-#### SLRU - segmented LRU, probationary
+#### SegmentedLRU
 - only frequently reused items reach protected area.
 - uses 2 LRU small and large one.
 - evict from small, if large is full, move item in small
