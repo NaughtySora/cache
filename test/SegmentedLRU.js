@@ -28,5 +28,16 @@ describe('SegmentedLRU', () => {
     cache.set(4, 4);
     cache.set(5, 5);
     assert.equal(cache.size, 3);
+    cache.set(3, 5);
+    cache.get(3);
+    cache.set(4, 6);
+    cache.set(4, 7);
+    cache.set(3, 8);
+    cache.get(3);
+    cache.set(10, 12);
+    cache.get(10);
+    assert.equal(cache.size, 5);
+    cache.clear();
+    assert.equal(cache.size, 0);
   });
 });
