@@ -57,6 +57,11 @@ class DLL {
     return this.#unshift(node);
   }
 
+  makeFirst(node) {
+    this.detach(node);
+    this.#unshift(node);
+  }
+
   get isEmpty() {
     return this.#head === null;
   }
