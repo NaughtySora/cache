@@ -77,29 +77,42 @@ treat specific value as positive cache hit
 - sequential scans, Streaming / ETL reads, Iterating over large datasets once
 - bad when user driven workloads, hot keys accessed repeatedly, interactive systems
 
-
-#### SegmentedLRU
+#### Segmented LRU
 - only frequently reused items reach protected area.
 - uses 2 LRU small and large one.
 - evict from small, if large is full, move item in small
 - good for web caches, db buffers, noisy traffic, mixed workload
 - bad bc needs tuning, complexity, 
 
-- ARC - adaptive replacement cache, Uses ghost lists
-- CLOCK/CLOCK-Pro - approximate LRU with a clock hand
-- FIFO - first in first out
-- TTL - time based
-- Random replacements - cheap
-- Ghost objects - keeps identity, tracking access
-- Lazy initialization - loads field on first access
-- Virtual Proxy - object stands in for real object, fetches on demand (danger Hidden I/O)
-- Value holder - caches computed result lazy
-- Eager Loading - loads everything upfront, latency > memory
-- Preemptive read / Prefetching - loads data before its requested
-- Sequential read-ahead - if you read page N, loads N+1, N+2
-- Graph-based prefetch - loads related entities
-- Predictive prefetch - based on tracked data
-- Speculative execution - loads data that might be needed
+#### ARC - adaptive replacement cache
+- automatically adapts between LRU and LFU
+- tracks recency and frequency, and evicted items
+- uses 4 LRU lists:
+1. recent cache (seen)
+2. frequent cache (kept)
+3. evicted from recent (ghost cache)
+4. evicted from frequent (ghost cache)
+- ghost cache stores only keys
+- good for mixed workload, unknown access patterns, storage systems, page caching, changing traffic
+- bad for tiny caches, extremely latency requirements, simple workload
+
+> CAR (clock-based ARC)
+> TinyLFU
+> W-TinyLFU
+> CLOCK/CLOCK-Pro - approximate LRU with a clock hand
+> FIFO - first in first out
+> TTL - time based
+> Random replacements - cheap
+> Ghost objects - keeps identity, tracking access
+> Lazy initialization - loads field on first access
+> Virtual Proxy - object stands in for real object, fetches on demand (danger Hidden I/O)
+> Value holder - caches computed result lazy
+> Eager Loading - loads everything upfront, latency > memory
+> Preemptive read / Prefetching - loads data before its requested
+> Sequential read-ahead - if you read page N, loads N+1, N+2
+> Graph-based prefetch - loads related entities
+> Predictive prefetch - based on tracked data
+> Speculative execution - loads data that might be needed
 
 ## Revalidation policy
 - TTL - simple, risky, popular
